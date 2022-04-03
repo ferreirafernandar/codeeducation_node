@@ -10,12 +10,23 @@ const config = {
 const mysql = require("mysql");
 const connection = mysql.createConnection(config);
 
-const sql = `INSERT INTO people(name) values('Wesley')`;
+const sql = `INSERT INTO people(name) values('Adora')`;
 connection.query(sql);
-connection.end();
 
 app.get("/", (req, res) => {
-  res.send("<h1>Full Cycle Rocks!</h1>");
+  connection.connect(function (err) {
+    connection.query(
+      "SELECT name FROM people",
+      function (err, results, fields) {
+        var html = "";
+        html = "<h1>Full Cycle Rocks!</h1>";
+        html += "<ul>";
+        for (var i in results) html += "<li>" + results[i].name + "</li>";
+        html += "</ul>";
+        res.send(html);
+      }
+    );
+  });
 });
 
 app.listen(port, () => {

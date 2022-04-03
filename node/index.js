@@ -15,7 +15,7 @@ connection.query(sql);
 connection.end();
 
 app.get("/", (req, res) => {
-  res.send("<h1>Full Cycle</h1>");
+  res.send("<h1>Full Cycle Rocks!</h1>");
 });
 
 app.listen(port, () => {

@@ -1,18 +1,6 @@
-FROM mysql:5.7.16
-# ADD schema.sql /docker-entrypoint-initdb.d
-# ENTRYPOINT ["/docker-entrypoint.sh"]
+FROM mysql:5.7.16 
+ENV MYSQL_ROOT_PASSWORD=root
 
-ADD files/run_db files/init_db files/schema.sql /tmp/
-
-# init_db will create the default
-# database from epcis_schema.sql, then
-# stop mysqld, and finally copy the /var/lib/mysql directory
-# to default_mysql_db.tar.gz
-RUN /tmp/init_db
-
-# run_db starts mysqld, but first it checks
-# to see if the /var/lib/mysql directory is empty, if
-# it is it is seeded with default_mysql_db.tar.gz before
-# the mysql is fired up
-
-ENTRYPOINT "/tmp/run_db"
+COPY sql/sql_conf /etc/mysql/conf.d
+RUN sed -i 's/!includedir \/etc\/mysql\/conf\.d\//#!includedir \/etc\/mysql\/conf\.d\//' /etc/mysql/conf.d/sql_conf 
+COPY sql/init.sql /docker-entrypoint-initdb.d/
